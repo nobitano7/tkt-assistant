@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { parseGroupFareRequest } from '../services/apiService';
 import type { GroupFareFlightInfo } from '../types';
@@ -153,6 +154,7 @@ export const GroupFareModal: React.FC<GroupFareModalProps> = ({ isOpen, onClose 
     };
 
     const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        // FIX: Correctly handle pasted files in the textarea.
         for (let i = 0; i < e.clipboardData.items.length; i++) {
           const item = e.clipboardData.items[i];
           if (item.kind === 'file' && item.type.startsWith('image/')) {
