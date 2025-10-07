@@ -1,7 +1,6 @@
 import React from 'react';
 
 interface ToolsHeaderProps {
-  onOpenQuoteModal: () => void;
   onOpenMessagingModal: () => void;
   onOpenGroupFareModal: () => void;
   onOpenLaborTicketModal: () => void;
@@ -21,7 +20,6 @@ const HeaderToolButton: React.FC<{ text: string; icon: React.ReactNode; onClick?
 );
 
 export const ToolsHeader: React.FC<ToolsHeaderProps> = ({
-  onOpenQuoteModal,
   onOpenMessagingModal,
   onOpenGroupFareModal,
   onOpenLaborTicketModal,
@@ -32,38 +30,32 @@ export const ToolsHeader: React.FC<ToolsHeaderProps> = ({
     <div className="bg-slate-50 border-b border-slate-200 px-4 py-1">
         <div className="flex items-center space-x-1 flex-wrap">
             <HeaderToolButton
-                text="Tạo báo giá"
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" /><path fillRule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clipRule="evenodd" /></svg>}
-                onClick={onOpenQuoteModal}
-                title="Tạo báo giá chi tiết từ PNR"
-            />
-            <HeaderToolButton
-                text="Tạo tin nhắn"
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" /></svg>}
+                text="Tin nhắn"
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>}
                 onClick={onOpenMessagingModal}
                 title="Trích xuất thông tin, tạo tin nhắn và check-in từ booking"
             />
-             <HeaderToolButton
-                text="Giá đoàn"
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" /></svg>}
-                onClick={onOpenGroupFareModal}
-                title="Phân tích và xuất file Excel cho yêu cầu giá đoàn"
-            />
             <HeaderToolButton
-                text="Tra cứu GDS & TIMATIC"
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" /></svg>}
+                text="Công cụ Tra cứu GDS"
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9 17.25v-3.162a4.5 4.5 0 00-3.364-4.243 3 3 0 01-1.26-2.595V5.25a3 3 0 013-3h10a3 3 0 013 3v2a3 3 0 01-1.26 2.595 4.5 4.5 0 00-3.364 4.243V17.25l-4-1.5-4 1.5z" /></svg>}
                 onClick={onOpenLookupModal}
                 title="Tra cứu TIMATIC, mã hóa/giải mã GDS, và các công cụ khác"
             />
              <HeaderToolButton
-                text="Vé lao động"
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-1.082.217l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7a1 1 0 00-.217-1.082z" /></svg>}
+                text="Công cụ giá đoàn"
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" /></svg>}
+                onClick={onOpenGroupFareModal}
+                title="Phân tích và xuất file Excel cho yêu cầu giá đoàn"
+            />
+             <HeaderToolButton
+                text="Xuất vé lao động"
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a2 2 0 00-2 2v1H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2V4a2 2 0 00-2-2z" /></svg>}
                 onClick={onOpenLaborTicketModal}
                 title="Công cụ hỗ trợ xuất vé cho người lao động"
             />
             <HeaderToolButton
-                text="Tìm sân bay"
-                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>}
+                text="Sân bay gần nhất"
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.527-1.973c.218-.087.46-.168.707-.24a.75.75 0 01.707.707c-.072.247-.153.49-.24.707A2 2 0 0112 8v.5a1.5 1.5 0 01-1.5 1.5c-.526 0-.988-.27-1.268-.694a6.002 6.002 0 01-1.912 2.706 1.5 1.5 0 01-2.228-2.228z" clipRule="evenodd" /></svg>}
                 onClick={onOpenNearestAirportModal}
                 title="Tìm các sân bay quốc tế gần một địa điểm"
             />
