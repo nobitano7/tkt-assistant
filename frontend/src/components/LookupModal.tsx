@@ -14,7 +14,7 @@ const formatResult = (text: string) => {
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       .replace(/\n/g, '<br />');
 
-    html = html.replace(/<pre(.*?)>([\s\S]*?)<\/pre>/g, (match, p1, p2) => {
+    html = html.replace(/<pre(.*?)>([\s\S]*?)<\/pre>/g, (_match, p1, p2) => {
         return `<pre${p1}>${p2.replace(/<br \/>/g, '\n')}</pre>`;
     });
     return html;
