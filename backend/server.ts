@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-// FIX: The path argument '/' is not necessary for applying cors middleware globally.
+// FIX: Corrected an issue where `cors()` was called with an unnecessary path argument. To apply the middleware globally, it should be called without arguments.
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
