@@ -1,4 +1,4 @@
-import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo, type ChatMessage } from '../types';
+import { type BookingInfo, type AirportInfo, type GroupFareFlightInfo, type ChatMessage, type ItineraryGroup } from '../types';
 
 // Use Vite's environment variable handling. The `import.meta.env` object is populated by Vite during the build process.
 const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3001/api';
@@ -37,21 +37,21 @@ export async function sendMessage(
   return response.body;
 }
 
-
-// Tool-specific functions
 export async function parsePnrToQuote(pnrText: string): Promise<{ itineraryGroups: ItineraryGroup[] }> {
-  const response = await fetch(`${API_BASE_URL}/parse-pnr-to-quote`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pnrText }),
-  });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to parse PNR to quote.');
-  }
-  return response.json();
+    const response = await fetch(`${API_BASE_URL}/parse-pnr-to-quote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pnrText }),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to parse PNR to quote.');
+    }
+    return response.json();
 }
 
+
+// Tool-specific functions
 export async function parseBookingToMessages(content: string, attachedFile: File | null): Promise<BookingInfo> {
   const filePart = attachedFile ? await fileToData(attachedFile) : null;
   
