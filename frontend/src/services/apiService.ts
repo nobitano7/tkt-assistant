@@ -1,8 +1,8 @@
+
 import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo } from '../types';
 import { type ChatMessage } from '../types';
 
 // Use Vite's environment variable handling. The `import.meta.env` object is populated by Vite during the build process.
-// FIX: Cast `import.meta` to `any` to bypass TypeScript error when Vite client types are not available.
 const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 // Helper function to convert a File object to a Gemini-compatible Part (as a plain object).
@@ -123,3 +123,6 @@ export async function runGdsEncoderTool(tool: string, params: any): Promise<{ re
   }
   return response.json();
 }
+
+// FIX: Export the GroupFareFlightInfo type so it can be imported elsewhere.
+export type { GroupFareFlightInfo };
