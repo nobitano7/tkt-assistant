@@ -1,5 +1,7 @@
 
-import express, { Request, Response } from 'express';
+
+// FIX: Disambiguated express Request and Response types to prevent conflict with global types.
+import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 // FIX: Removed `type` keyword from import to comply with coding guidelines.
@@ -398,7 +400,7 @@ Phân tích kỹ lưỡng các quy định cho từng chặng (nếu có quá c�
     
     try {
         const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: timaticPrompt });
-        return response.text ?? "Xin lỗi, không thể tra cứu thông tin TIMATIC vào lúc này.";
+        return response.text;
     } catch (error) {
         console.error("Error in TIMATIC tool simulation:", error);
         return "Xin lỗi, không thể tra cứu thông tin TIMATIC vào lúc này.";
@@ -414,7 +416,8 @@ function runGenerateSrDocsTool(args: any): { command: string } {
 
 // --- API Endpoints ---
 
-app.post('/api/chat', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/chat', async (req: express.Request, res: express.Response) => {
     try {
         const { history, message, image } = req.body;
         
@@ -504,7 +507,8 @@ app.post('/api/chat', async (req: Request, res: Response) => {
 });
 
 
-app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Response) => {
     try {
         const { pnrText } = req.body;
         if (!pnrText) {
@@ -564,7 +568,7 @@ app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
             }
         });
 
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
             throw new Error('Received an empty response from the AI model.');
         }
@@ -577,7 +581,8 @@ app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
 });
 
 
-app.post('/api/parse-booking-to-messages', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/parse-booking-to-messages', async (req: express.Request, res: express.Response) => {
     try {
         const { content, filePart } = req.body;
         const prompt = `
@@ -620,7 +625,7 @@ Return a JSON object based on the provided schema. All fields must be strings. A
             }
         });
 
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
             throw new Error('Received an empty response from the AI model.');
         }
@@ -633,7 +638,8 @@ Return a JSON object based on the provided schema. All fields must be strings. A
 });
 
 
-app.post('/api/parse-group-fare', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/parse-group-fare', async (req: express.Request, res: express.Response) => {
     try {
         const { content, filePart } = req.body;
         const prompt = `
@@ -680,7 +686,7 @@ Follow these rules precisely:
             }
         });
 
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
             throw new Error('Received an empty response from the AI model.');
         }
@@ -692,7 +698,8 @@ Follow these rules precisely:
     }
 });
 
-app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/find-nearest-airports', async (req: express.Request, res: express.Response) => {
     try {
         const { location } = req.body;
         if (!location) {
@@ -724,7 +731,7 @@ app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
                 }
             }
         });
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
              return res.json([]);
         }
@@ -736,7 +743,8 @@ app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
 });
 
 
-app.post('/api/timatic-lookup', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/timatic-lookup', async (req: express.Request, res: express.Response) => {
     try {
         const { nationality, destination, transitPoints, bookingText } = req.body;
 
@@ -799,7 +807,8 @@ app.post('/api/timatic-lookup', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/api/gds-encoder', async (req: Request, res: Response) => {
+// FIX: Use express.Request and express.Response to ensure correct types are used.
+app.post('/api/gds-encoder', async (req: express.Request, res: express.Response) => {
     try {
         const { tool, params } = req.body;
         let prompt = '';
@@ -827,7 +836,7 @@ app.post('/api/gds-encoder', async (req: Request, res: Response) => {
             contents: prompt,
         });
 
-        res.json({ result: response.text ?? '' });
+        res.json({ result: response.text });
     } catch (error) {
         console.error('Error in /api/gds-encoder:', error);
         res.status(500).json({ error: 'Failed to run GDS encoder tool.' });
