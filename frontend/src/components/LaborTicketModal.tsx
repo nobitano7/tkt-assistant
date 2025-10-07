@@ -57,8 +57,7 @@ const CommandDisplay: React.FC<{
 
 
 const TinhGiaTab: React.FC = () => {
-    // These are currently static values. If they become editable in the future,
-    // they should be converted back to useState.
+    // FIX: Changed from useState to const as setters were unused.
     const fareBasis = 'L1YVN';
     const discount = '5';
     const altFareBasis = 'QOXVN';
