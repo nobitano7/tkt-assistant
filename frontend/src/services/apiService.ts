@@ -1,6 +1,4 @@
-
-import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo } from '../types';
-import { type ChatMessage } from '../types';
+import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo, type ChatMessage } from '../types';
 
 // Use Vite's environment variable handling. The `import.meta.env` object is populated by Vite during the build process.
 const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3001/api';
@@ -123,6 +121,3 @@ export async function runGdsEncoderTool(tool: string, params: any): Promise<{ re
   }
   return response.json();
 }
-
-// FIX: Export the GroupFareFlightInfo type so it can be imported elsewhere.
-export type { GroupFareFlightInfo };
