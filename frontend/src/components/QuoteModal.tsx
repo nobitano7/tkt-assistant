@@ -21,7 +21,6 @@ const COMPANIES = {
   abtrip: {
     id: 'abtrip',
     name: 'Abtrip',
-    // FIX: Use imported abtripLogo variable instead of hardcoded string.
     logo: abtripLogo,
     fullName: 'CÔNG TY TNHH THƯƠNG MẠI DU LỊCH VÀ DỊCH VỤ HÀNG KHÔNG ABTRIP',
     address: 'Trụ sở chính: 16/61 Lạc Trung, ph. Vĩnh Tuy, Hà Nội<br/>Chi nhánh: Tầng 3, nhà ga T2, sân bay Quốc tế Nội Bài, Hà Nội',
@@ -56,7 +55,7 @@ const COMPANIES = {
    hongngochah: {
     id: 'hongngochah',
     name: 'Hồng Ngọc Hà',
-    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyODAgODAiPjxwYXRoIGQ9Ik00MCw3MCBDODAsNTUgMTIwLDU1IDE2MCw3MCIgc3Ryb2tlPSIjMDU3RUE5IiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNTUsNDMgTDI1LDQzIEw0MCwxMyBaIiBmaWxsPSIjREIyNzI4Ii8+PHBhdGggZD0iTTc1LDQzIEwxMDUsNDMgTDkwLDEzIFoiIGZpbGw9IiNEQjI7Mjc4Ii8+PHRleHQgeD0iMTA1IiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQwcHgiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMDAwIj5ob25nbmdvY2hhPC90ZXh0Pjwvc3ZnPg==',
+    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyODAgODAiPjxwYXRoIGQ9Ik00MCw3MCBDODAsNTUgMTIwLDU1IDE2MCw3MCIgc3Ryb2tlPSIjMDU3RUE5IiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNTUsNDMgTDI1LDQzIEw0MCwxMyBaIiBmaWxsPSIjREIyNzI4Ii8+PHBhdGggZD0iTTc1LDQzIEwxMDUsNDMgTDkwLDEzIFoiIGZpbGw9IiNEQjI3MjgiLz48dGV4dCB4PSIxMDUiIHk9IjU1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDBweCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwMDAiPmhvbmduZ29jaGE8L3RleHQ+PC9zdmc+',
     fullName: 'PHÒNG VÉ HỒNG NGỌC HÀ',
     address: '30 Phan Chu Trinh Str, Hoan Kiem Dist., Ha Noi, Vietnam',
     contact: 'Tel: (84-4) 39275720 | Fax: (84-4) 39275719',
@@ -180,7 +179,6 @@ const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({ isOpen, onClose, 
                 margins: { top: 720, right: 720, bottom: 720, left: 720 },
             });
             
-            // FIX: Ensure the data passed to createObjectURL is a Blob, as html-to-docx can return an ArrayBuffer.
             const blob = fileData instanceof Blob ? fileData : new Blob([fileData]);
             
             const link = document.createElement('a');
@@ -205,7 +203,7 @@ const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({ isOpen, onClose, 
         try {
             const blobHtml = new Blob([activePreview.htmlContent], { type: 'text/html' });
             const blobText = new Blob([activePreview.plainTextContent], { type: 'text/plain' });
-            const clipboardItem = new ClipboardItem({
+            const clipboardItem = new (window as any).ClipboardItem({
                 'text/html': blobHtml,
                 'text/plain': blobText,
             });
@@ -603,7 +601,6 @@ td,th{border:1px solid #000;padding:5px;vertical-align:middle;height:25px;}
 };
 
 
-// FIX: Add export to make the component available for import.
 export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose }) => {
   const [pnrText, setPnrText] = useState('');
   const [quoteData, setQuoteData] = useState<QuoteData>(initialQuoteState);
