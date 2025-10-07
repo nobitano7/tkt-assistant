@@ -111,7 +111,7 @@ const App: React.FC = () => {
   };
 
   const handleSendMessage = useCallback(async (messageText: string, imageFile: File | null) => {
-    if (isLoading || (!messageText.trim() && !imageFile && !contextualDocument)) {
+    if (isLoading || !activeSessionId || (!messageText.trim() && !imageFile && !contextualDocument)) {
         return;
     }
 

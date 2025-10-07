@@ -57,16 +57,17 @@ const CommandDisplay: React.FC<{
 
 
 const TinhGiaTab: React.FC = () => {
-    // B1 states
-    const [fareBasis] = useState('L1YVN');
-    const [discount] = useState('5');
-    const [altFareBasis] = useState('QOXVN');
-    const [altDiscount] = useState('25');
+    // These are currently static values. If they become editable in the future,
+    // they should be converted back to useState.
+    const fareBasis = 'L1YVN';
+    const discount = '5';
+    const altFareBasis = 'QOXVN';
+    const altDiscount = '25';
 
     return (
         <div className="space-y-4">
             <h3 className="text-md font-semibold text-sky-700">Tính giá vé lao động</h3>
-            <p className="text-sm text-slate-500">Nội dung cho tab này không đầy đủ do file nguồn bị cắt ngắn. Chức năng này sẽ được hoàn thiện sau.</p>
+            <p className="text-sm text-slate-500">Chức năng này đang được phát triển.</p>
              <CommandDisplay
                 title="Bước 1: Tạo Fare Quote"
                 command={`FXX/R,UP,S2/ET/FB-${fareBasis}/D${discount}/AC-FB-${altFareBasis}/D${altDiscount}`}

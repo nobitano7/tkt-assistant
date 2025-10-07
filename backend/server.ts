@@ -10,14 +10,19 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-// Fix: Explicitly specifying the path for the cors middleware to resolve a potential TypeScript overload issue.
-app.use('/', cors());
+// FIX: Swapped middleware order to resolve a potential type overload issue with app.use.
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
+app.use(cors());
+
+if (!process.env.API_KEY) {
+    console.error("FATAL ERROR: API_KEY is not defined in environment variables.");
+    process.exit(1); // Exit if API key is not set
+}
 
 // Initialize Gemini AI
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
-// System instructions and tools (moved from frontend's geminiService)
+// System instructions and tools
 const systemInstruction = `
 You are a world-class business assistant for airline ticketing agents in Vietnam. Your name is 'TKT Assistant'. You are an expert in all aspects of airline ticketing operations.
 
@@ -392,7 +397,7 @@ Phân tích kỹ lưỡng các quy định cho từng chặng (nếu có quá c�
     
     try {
         const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: timaticPrompt });
-        return response.text ?? "Xin lỗi, không có phản hồi từ AI.";
+        return response.text;
     } catch (error) {
         console.error("Error in TIMATIC tool simulation:", error);
         return "Xin lỗi, không thể tra cứu thông tin TIMATIC vào lúc này.";
@@ -408,7 +413,6 @@ function runGenerateSrDocsTool(args: any): { command: string } {
 
 // --- API Endpoints ---
 
-// Main chat endpoint
 app.post('/api/chat', async (req, res) => {
     try {
         const { history, message, image } = req.body;
@@ -427,11 +431,16 @@ app.post('/api/chat', async (req, res) => {
             history: formattedHistory
         });
 
-        const messagePayload: (string | Part)[] = image 
-            ? [{ text: message }, { inlineData: { data: image.data, mimeType: image.mimeType } }] 
-            : [message];
-
-        const resultStream = await chat.sendMessageStream({ message: messagePayload as any });
+        const messageParts: Part[] = [];
+        if (message) {
+            messageParts.push({ text: message });
+        }
+        if (image) {
+            messageParts.push({ inlineData: { data: image.data, mimeType: image.mimeType } });
+        }
+        
+        // FIX: The `message` property should be an array of Parts, not an object containing a `parts` property.
+        const resultStream = await chat.sendMessageStream({ message: messageParts });
         
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Transfer-Encoding', 'chunked');
@@ -474,6 +483,7 @@ app.post('/api/chat', async (req, res) => {
                     functionResponse: { name: toolResponse.name, response: toolResponse.response },
                 }));
 
+                // FIX: The `message` property should be an array of Parts, not an object containing a `parts` property.
                 const finalStream = await chat.sendMessageStream({ message: functionResponseParts });
                 
                 for await (const chunk of finalStream) {
@@ -493,7 +503,6 @@ app.post('/api/chat', async (req, res) => {
 });
 
 
-// Tool-specific endpoints
 app.post('/api/parse-pnr-to-quote', async (req, res) => {
     try {
         const { pnrText } = req.body;
@@ -554,12 +563,11 @@ app.post('/api/parse-pnr-to-quote', async (req, res) => {
             }
         });
 
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
             throw new Error('Received an empty response from the AI model.');
         }
-        const parsedJson = JSON.parse(jsonString);
-        res.json(parsedJson);
+        res.json(JSON.parse(jsonString));
 
     } catch (error) {
         console.error('Error in /api/parse-pnr-to-quote:', error);
@@ -611,7 +619,7 @@ Return a JSON object based on the provided schema. All fields must be strings. A
             }
         });
 
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
             throw new Error('Received an empty response from the AI model.');
         }
@@ -671,7 +679,7 @@ Follow these rules precisely:
             }
         });
 
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
             throw new Error('Received an empty response from the AI model.');
         }
@@ -715,7 +723,7 @@ app.post('/api/find-nearest-airports', async (req, res) => {
                 }
             }
         });
-        const jsonString = response.text ?? '';
+        const jsonString = response.text;
         if (!jsonString) {
              return res.json([]);
         }
@@ -741,7 +749,7 @@ app.post('/api/timatic-lookup', async (req, res) => {
     1.  **Nationality:** Find the passenger's nationality. Look for fields like 'NATIONALITY', 'QUOC TICH', or infer it from passport details (e.g., 'P/VNM/...'). If multiple nationalities are present, pick the first one. If not found, return an empty string.
     2.  **Destination:** Identify the final destination city/country of the entire journey.
     3.  **Transit Points:** List all intermediate stops where the passenger gets off the plane and boards another one. Do not include simple technical stops. If there are no transit points, return an empty array.
-    4.  Return the data as a JSON object.
+    4.  **JSON Output:** The final output MUST be a JSON object.
 
     Booking Text:
     ---
@@ -764,8 +772,8 @@ app.post('/api/timatic-lookup', async (req, res) => {
                     }
                 }
             });
-            const jsonString = extractResponse.text ?? '{}';
-            const extractedDetails = JSON.parse(jsonString);
+            const jsonString = extractResponse.text;
+            const extractedDetails = JSON.parse(jsonString || '{}');
 
             if (!extractedDetails.nationality || !extractedDetails.destination) {
                 return res.status(400).json({ error: 'Could not automatically determine Nationality or Destination from booking.' });
@@ -818,7 +826,7 @@ app.post('/api/gds-encoder', async (req, res) => {
             contents: prompt,
         });
 
-        res.json({ result: response.text ?? '' });
+        res.json({ result: response.text });
     } catch (error) {
         console.error('Error in /api/gds-encoder:', error);
         res.status(500).json({ error: 'Failed to run GDS encoder tool.' });

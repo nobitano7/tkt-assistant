@@ -32,7 +32,7 @@ const COMPANIES = {
   thanhviet: {
     id: 'thanhviet',
     name: 'Thành Việt',
-    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDk2IDQ4Ij48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMDY1QjIiIGQ9Ik0zMC4wMjYgNDcuNTI4Yy0uMzk2LjYxOC0xLjE1NS44MjQtMS43NzMuNDI3bC0yMC4xMS0xMy4xMDljLS42MTktLjM5Ni0uODI1LTEuMTU1LS40MjgtMS43NzNsMTMuMTEtMjAuMTExYy4zOTYtLjYxOCAxLjE1NS0uODI0IDEuNzczLS40MjdsMjAuMTEgMTMuMTEuMDEzLS4wMDhjLjYxOC4zOTYgLjgyNCAxLjE1NS40MjcgMS43NzNsLTEzLjEgMjAuMTEtLjAxMi0uMDA5Wm0uMDUyLTEuODQ2bDExLjg5MS0xOC4yNTUtMTguMjU1LTExLjg5MUw0LjgyIDI3LjQyNGwxMy40MTIgOC43NDcgMTEuODQ2LTcuNzM3LS4wMDkuMDE0Wm0tMTUuNTA5LTIzLjgxM2wtNS42NDQgOC42NzYtOC42NzYtNS42NDQgMTguNzAxLTEyLjE4MSAxMi4xODEgMTguN2wtOC42NzYtNS42NDQtNS42NDQgOC42NzYtMi44Mi00LjMzOEwyNS45MyAxMy41bC00LjMzOC0yLjgyWiIvPjxwYXRoIGZpbGw9IiMwMDY1QjIiIGQ9Ik02My41MDcgNDIuNTE3VjUuNTI3aDYuNTYydjM3SDYzLjUwN1ptMTQuMjQ1IDBWNS41MjdoNi40OTV2MjEuMzQ4bC0uMTQxLjE0djE1LjQ0aC02LjM1NFoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNNjMuNTA3IDQyLjUxN1Y1LjUyN2g2LjU2MnYzN0g2My41MDdabTE0LjI0NSAwVjUuNTI3aDYuNDk1djIxLjM0OGwtLjE0MS4xNHYxNS40NGgtNi4zNTRaIi8+PHBhdGggZmlsbD0iIzAwNjVCMiIgZD0iTTc3Ljc1MiA0Mi41MTd2LTguNThoNC4yODJ2LTUuNTI3aC00LjI4MnYtOS40ODNoLTUuOTM4djI5LjEzNGwxLjY1Ni0uMDAxWiIvPjxnPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik03Ny43NTIgNDIuNTE3di04LjU4aDQuMjgydi01LjUyN2gtNC4yODJ2LTkuNDgzaC01LjkzOHYyOS4xMzRsMS42NTYtLjAwMVoiLz48L2c+PC9nPjwvc3ZnPg==',
+    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZHRoPSI0OCIgdmlld0JveD0iMCAwIDk2IDQ4Ij48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMDY1QjIiIGQ9Ik0zMC4wMjYgNDcuNTI4Yy0uMzk2LjYxOC0xLjE1NS44MjQtMS43NzMuNDI3bC0yMC4xMS0xMy4xMDljLS42MTktLjM5Ni0uODI1LTEuMTU1LS40MjgtMS43NzNsMTMuMTEtMjAuMTExYy4zOTYtLjYxOCAxLjE1NS0uODI0IDEuNzczLS40MjdsMjAuMTEgMTMuMTEuMDEzLS4wMDhjLjYxOC4zOTYgLjgyNCAxLjE1NS40MjcgMS43NzNsLTEzLjEgMjAuMTEtLjAxMi0uMDA5Wm0uMDUyLTEuODQ2bDExLjg5MS0xOC4yNTUtMTguMjU1LTExLjg5MUw0LjgyIDI3LjQyNGwxMy40MTIgOC43NDcgMTEuODQ2LTcuNzM3LS4wMDkuMDE0Wm0tMTUuNTA5LTIzLjgxM2wtNS42NDQgOC42NzYtOC42NzYtNS42NDQgMTguNzAxLTEyLjE4MSAxMi4xODEgMTguN2wtOC42NzYtNS42NDQtNS42NDQgOC42NzYtMi44Mi00LjMzOEwyNS45MyAxMy41bC00LjMzOC0yLjgyWiIvPjxwYXRoIGZpbGw9IiMwMDY1QjIiIGQ9Ik02My41MDcgNDIuNTE3VjUuNTI3aDYuNTYydjM3SDYzLjUwN1ptMTQuMjQ1IDBWNS41MjdoNi40OTV2MjEuMzQ4bC0uMTQxLjE0djE1LjQ0aC02LjM1NFoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNNjMuNTA3IDQyLjUxN1Y1LjUyN2g2LjU2MnYzN0g2My41MDdabTE0LjI0NSAwVjUuNTI3aDYuNDk1djIxLjM0OGwtLjE0MS4xNHYxNS40NGgtNi4zNTRaIi8+PHBhdGggZmlsbD0iIzAwNjVCMiIgZD0iTTc3Ljc1MiA0Mi41MTd2LTguNThoNC4yODJ2LTUuNTI3aC00LjI4MnYtOS40ODNoLTUuOTM4djI5LjEzNGwxLjY1Ni0uMDAxWiIvPjxnPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik03Ny43NTIgNDIuNTE3di04LjU4aDQuMjgydi01LjUyN2gtNC4yODJ2LTkuNDgzaC01LjkzOHYyOS4xMzRsMS42NTYtLjAwMVoiLz48L2c+PC9nPjwvc3ZnPg==',
     fullName: 'THANH VIET TRAVEL AGENT-TOURS, WORLD WIDE TICKETING',
     fullNameInPayment: 'Công ty TNHH Thương mại và Du lịch Thành Việt',
     address: '28N Phạm Hồng Thái - Hà Nội',
@@ -670,13 +670,13 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose }) => {
   };
 
   const baseTotalPrice = useMemo(() => {
-    return quoteData.itineraryGroups.reduce((total, group) => {
-        return total + group.priceRows.reduce((groupTotal, row) => {
+    return quoteData.itineraryGroups.reduce((groupTotal, group) => {
+        return groupTotal + group.priceRows.reduce((rowTotal, row) => {
             const base = parseFloat(row.baseFare.replace(/[^0-9]/g, '')) || 0;
             const tax = parseFloat(row.taxes.replace(/[^0-9]/g, '')) || 0;
             const fee = parseFloat(row.serviceFee.replace(/[^0-9]/g, '')) || 0;
             const pax = parseInt(row.paxCount, 10) || 0;
-            return groupTotal + (base + tax + fee) * pax;
+            return rowTotal + (base + tax + fee) * pax;
         }, 0);
     }, 0);
   }, [quoteData.itineraryGroups]);

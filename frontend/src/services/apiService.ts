@@ -1,23 +1,21 @@
-
 import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo } from '../types';
 import { type Part, type ChatMessage } from '../types';
 
-// FIX: Cast `import.meta` to `any` to bypass TypeScript errors related to Vite's environment variables (`import.meta.env`).
-// This workaround is necessary as the TypeScript environment appears to be misconfigured and cannot find Vite's client types.
+// Use Vite's environment variable handling. The `import.meta.env` object is populated by Vite during the build process.
+// FIX: Cast `import.meta` to `any` to bypass TypeScript error when Vite client types are not available.
 const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
-// Helper function to convert a File object to a Gemini-compatible Part.
-async function fileToGenerativePart(file: File): Promise<Part> {
-  const base64EncodedDataPromise = new Promise<string>((resolve) => {
+// Helper function to convert a File object to a Gemini-compatible Part (as a plain object).
+async function fileToData(file: File): Promise<{ data: string; mimeType: string }> {
+  const base64EncodedDataPromise = new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve((reader.result as string).split(',')[1]);
+    reader.onerror = reject;
     reader.readAsDataURL(file);
   });
   return {
-    inlineData: {
-      data: await base64EncodedDataPromise,
-      mimeType: file.type,
-    },
+    data: await base64EncodedDataPromise,
+    mimeType: file.type,
   };
 }
 
@@ -34,7 +32,7 @@ export async function sendMessage(
   });
 
   if (!response.ok || !response.body) {
-    const error = await response.json();
+    const error = await response.json().catch(() => ({ error: 'Network response was not ok and no JSON body.' }));
     throw new Error(error.error || 'Network response was not ok.');
   }
 
@@ -57,7 +55,7 @@ export async function parsePnrToQuote(pnrText: string): Promise<{ itineraryGroup
 }
 
 export async function parseBookingToMessages(content: string, attachedFile: File | null): Promise<BookingInfo> {
-  const filePart = attachedFile ? await fileToGenerativePart(attachedFile) : null;
+  const filePart = attachedFile ? await fileToData(attachedFile) : null;
   
   const response = await fetch(`${API_BASE_URL}/parse-booking-to-messages`, {
     method: 'POST',
@@ -73,7 +71,7 @@ export async function parseBookingToMessages(content: string, attachedFile: File
 }
 
 export async function parseGroupFareRequest(content: string, attachedFile: File | null): Promise<GroupFareFlightInfo[]> {
-  const filePart = attachedFile ? await fileToGenerativePart(attachedFile) : null;
+  const filePart = attachedFile ? await fileToData(attachedFile) : null;
   const response = await fetch(`${API_BASE_URL}/parse-group-fare`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

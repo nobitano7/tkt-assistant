@@ -109,7 +109,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         
         <BookmarkManager
           bookmarks={bookmarks}
+          // FIX: Pass the correct prop `onAddBookmark` instead of the undefined `addBookmark`.
           onAdd={onAddBookmark}
+          // FIX: Pass the correct prop `onDeleteBookmark` instead of the undefined `deleteBookmark`.
           onDelete={onDeleteBookmark}
         />
         

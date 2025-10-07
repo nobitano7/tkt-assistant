@@ -2,7 +2,7 @@
   "name": "tkt-assistant-backend",
   "version": "1.0.0",
   "description": "Backend server for TKT Assistant",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",

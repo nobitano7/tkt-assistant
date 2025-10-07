@@ -114,6 +114,7 @@ const TimaticTab: React.FC = () => {
             const transitArray = transitPoints.split(',').map(p => p.trim()).filter(Boolean);
             const response = await runTimaticTool(nationality, destination, transitArray, bookingText);
             setResult(response.timaticResult);
+
             if (response.extractedDetails) {
                 setNationality(response.extractedDetails.nationality || nationality);
                 setDestination(response.extractedDetails.destination || destination);

@@ -61,4 +61,4 @@ Bây giờ bạn đã có:
 -   **Backend** đang chạy ở `http://localhost:3001`
 -   **Frontend** đang chạy ở `http://localhost:5173`
 
-Frontend sẽ tự động gửi yêu cầu đến backend, và bạn có thể sử dụng ứng dụng như bình thường mà không cần nhập API Key trên giao diện.
+Frontend sẽ tự động gửi yêu cầu đến backend, và bạn có thể sử dụng ứng dụng như bình thường.
