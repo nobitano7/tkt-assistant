@@ -404,7 +404,7 @@ Phân tích kỹ lưỡng các quy định cho từng chặng (nếu có quá c�
     
     try {
         const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: timaticPrompt });
-        return response.text ?? '';
+        return response.text;
     } catch (error) {
         console.error("Error in TIMATIC tool simulation:", error);
         return "Xin lỗi, không thể tra cứu thông tin TIMATIC vào lúc này.";
@@ -516,6 +516,7 @@ app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Re
         if (!pnrText) {
             return res.status(400).json({ error: 'pnrText is required.' });
         }
+        
         const prompt = `CRITICAL TASK: Analyze the following raw GDS text which contains multiple PNRs for a group booking. Your goal is to structure this information for a price quote.
 
 Follow these steps precisely:
@@ -586,7 +587,6 @@ ${pnrText}
         res.status(500).json({ error: 'Failed to parse PNR to quote.' });
     }
 });
-
 
 app.post('/api/parse-booking-to-messages', async (req: express.Request, res: express.Response) => {
     try {
