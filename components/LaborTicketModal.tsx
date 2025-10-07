@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 
 interface LaborTicketModalProps {
@@ -58,11 +59,11 @@ const CommandDisplay: React.FC<{
 
 
 const TinhGiaTab: React.FC = () => {
-    // B1 states
-    const [fareBasis, setFareBasis] = useState('L1YVN');
-    const [discount, setDiscount] = useState('5');
-    const [altFareBasis, setAltFareBasis] = useState('QOXVN');
-    const [altDiscount, setAltDiscount] = useState('25');
+    // FIX: Changed from useState to const as setters were unused.
+    const fareBasis = 'L1YVN';
+    const discount = '5';
+    const altFareBasis = 'QOXVN';
+    const altDiscount = '25';
 
     return (
         <div className="space-y-4">
