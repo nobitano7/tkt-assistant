@@ -1,6 +1,7 @@
 // FIX: Disambiguated express Request and Response types to prevent conflict with global types.
 // FIX: Explicitly import Request and Response from express to fix type resolution issues.
-import express, { Request, Response } from 'express';
+// FIX: Changed import to use default export and qualified types to avoid ambiguity.
+import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 // FIX: Removed `type` keyword from import to comply with coding guidelines.
@@ -417,7 +418,8 @@ function runGenerateSrDocsTool(args: any): { command: string } {
 
 // --- API Endpoints ---
 
-app.post('/api/chat', async (req: Request, res: Response) => {
+// FIX: Changed Request and Response to express.Request and express.Response to use correct types.
+app.post('/api/chat', async (req: express.Request, res: express.Response) => {
     try {
         const { history, message, image } = req.body;
         
@@ -444,6 +446,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
             messageParts.push({ inlineData: { data: image.data, mimeType: image.mimeType } });
         }
         
+        // FIX: sendMessageStream expects an object with a `message` property.
         const resultStream = await chat.sendMessageStream({ message: messageParts });
         
         res.setHeader('Content-Type', 'application/json');
@@ -487,6 +490,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
                     functionResponse: { name: toolResponse.name, response: toolResponse.response },
                 }));
 
+                // FIX: sendMessageStream expects an object with a `message` property.
                 const finalStream = await chat.sendMessageStream({ message: functionResponseParts });
                 
                 for await (const chunk of finalStream) {
@@ -506,7 +510,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
 });
 
 
-app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
+app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Response) => {
     try {
         const { pnrText } = req.body;
         if (!pnrText) {
@@ -579,7 +583,7 @@ app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
 });
 
 
-app.post('/api/parse-booking-to-messages', async (req: Request, res: Response) => {
+app.post('/api/parse-booking-to-messages', async (req: express.Request, res: express.Response) => {
     try {
         const { content, filePart } = req.body;
         const prompt = `
@@ -635,7 +639,7 @@ Return a JSON object based on the provided schema. All fields must be strings. A
 });
 
 
-app.post('/api/parse-group-fare', async (req: Request, res: Response) => {
+app.post('/api/parse-group-fare', async (req: express.Request, res: express.Response) => {
     try {
         const { content, filePart } = req.body;
         const prompt = `
@@ -694,7 +698,7 @@ Follow these rules precisely:
     }
 });
 
-app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
+app.post('/api/find-nearest-airports', async (req: express.Request, res: express.Response) => {
     try {
         const { location } = req.body;
         if (!location) {
@@ -738,7 +742,7 @@ app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
 });
 
 
-app.post('/api/timatic-lookup', async (req: Request, res: Response) => {
+app.post('/api/timatic-lookup', async (req: express.Request, res: express.Response) => {
     try {
         const { nationality, destination, transitPoints, bookingText } = req.body;
 
@@ -801,7 +805,7 @@ app.post('/api/timatic-lookup', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/api/gds-encoder', async (req: Request, res: Response) => {
+app.post('/api/gds-encoder', async (req: express.Request, res: express.Response) => {
     try {
         const { tool, params } = req.body;
         let prompt = '';
