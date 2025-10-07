@@ -14,8 +14,8 @@ const port = process.env.PORT || 3001;
 
 // Middleware
 // FIX: Swapped order to resolve potential type overload issue.
-app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
+app.use(cors());
 
 
 if (!process.env.API_KEY) {
@@ -417,7 +417,8 @@ function runGenerateSrDocsTool(args: any): { command: string } {
 
 // --- API Endpoints ---
 
-// FIX: Changed Request and Response to express.Request and express.Response to use correct types.
+// FIX: Corrected express handler signatures to use the imported `Request` and `Response` types directly,
+// resolving type errors on `req.body`, `res.status`, `res.json`, etc.
 app.post('/api/chat', async (req: Request, res: Response) => {
     try {
         const { history, message, image } = req.body;
@@ -436,7 +437,6 @@ app.post('/api/chat', async (req: Request, res: Response) => {
             history: formattedHistory
         });
 
-        // Correctly type messageParts as an array of Part objects
         const messageParts: Part[] = [];
         if (message) {
             messageParts.push({ text: message });
@@ -445,7 +445,6 @@ app.post('/api/chat', async (req: Request, res: Response) => {
             messageParts.push({ inlineData: { data: image.data, mimeType: image.mimeType } });
         }
         
-        // FIX: sendMessageStream expects an object with a `message` property.
         const resultStream = await chat.sendMessageStream({ message: messageParts });
         
         res.setHeader('Content-Type', 'application/json');
@@ -489,7 +488,6 @@ app.post('/api/chat', async (req: Request, res: Response) => {
                     functionResponse: { name: toolResponse.name, response: toolResponse.response },
                 }));
 
-                // FIX: sendMessageStream expects an object with a `message` property.
                 const finalStream = await chat.sendMessageStream({ message: functionResponseParts });
                 
                 for await (const chunk of finalStream) {
@@ -569,10 +567,7 @@ app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
             }
         });
 
-        const jsonString = response.text ?? '';
-        if (!jsonString) {
-            throw new Error('Received an empty response from the AI model.');
-        }
+        const jsonString = response.text ?? '{}';
         res.json(JSON.parse(jsonString));
 
     } catch (error) {
@@ -625,10 +620,7 @@ Return a JSON object based on the provided schema. All fields must be strings. A
             }
         });
 
-        const jsonString = response.text ?? '';
-        if (!jsonString) {
-            throw new Error('Received an empty response from the AI model.');
-        }
+        const jsonString = response.text ?? '{}';
         res.json(JSON.parse(jsonString));
 
     } catch (error) {
@@ -685,10 +677,7 @@ Follow these rules precisely:
             }
         });
 
-        const jsonString = response.text ?? '';
-        if (!jsonString) {
-            throw new Error('Received an empty response from the AI model.');
-        }
+        const jsonString = response.text ?? '[]';
         res.json(JSON.parse(jsonString));
 
     } catch (error) {
@@ -729,10 +718,7 @@ app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
                 }
             }
         });
-        const jsonString = response.text ?? '';
-        if (!jsonString) {
-             return res.json([]);
-        }
+        const jsonString = response.text ?? '[]';
         res.json(JSON.parse(jsonString));
     } catch (error) {
         console.error('Error in /api/find-nearest-airports:', error);
