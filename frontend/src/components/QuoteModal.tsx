@@ -208,7 +208,6 @@ const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({ isOpen, onClose, 
         try {
             const blobHtml = new Blob([activePreview.htmlContent], { type: 'text/html' });
             const blobText = new Blob([activePreview.plainTextContent], { type: 'text/plain' });
-            // FIX: Cast window to any to access the experimental API `ClipboardItem`.
             const clipboardItem = new (window as any).ClipboardItem({
                 'text/html': blobHtml,
                 'text/plain': blobText,
