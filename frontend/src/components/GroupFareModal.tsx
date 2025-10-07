@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { parseGroupFareRequest } from '../services/apiService';
 import type { GroupFareFlightInfo } from '../types';
