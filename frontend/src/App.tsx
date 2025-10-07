@@ -4,7 +4,6 @@ import { ChatWindow } from './components/ChatWindow';
 import { ChatInput } from './components/ChatInput';
 import { Header } from './components/Header';
 import { ToolsHeader } from './components/ToolsHeader';
-import { QuoteModal } from './components/QuoteModal';
 import { MessagingModal } from './components/MessagingModal';
 import { GroupFareModal } from './components/GroupFareModal';
 import { LaborTicketModal } from './components/LaborTicketModal';
@@ -47,7 +46,6 @@ const App: React.FC = () => {
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [attachedImage, setAttachedImage] = useState<File | null>(null);
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState<boolean>(false);
   const [isMessagingModalOpen, setIsMessagingModalOpen] = useState<boolean>(false);
   const [isGroupFareModalOpen, setIsGroupFareModalOpen] = useState<boolean>(false);
   const [isLaborTicketModalOpen, setIsLaborTicketModalOpen] = useState<boolean>(false);
@@ -270,7 +268,6 @@ const App: React.FC = () => {
         <div className="flex flex-col flex-1 bg-white transition-all duration-300 ease-in-out">
           <Header />
           <ToolsHeader
-            onOpenQuoteModal={() => setIsQuoteModalOpen(true)}
             onOpenMessagingModal={() => setIsMessagingModalOpen(true)}
             onOpenGroupFareModal={() => setIsGroupFareModalOpen(true)}
             onOpenLaborTicketModal={() => setIsLaborTicketModalOpen(true)}
@@ -290,10 +287,6 @@ const App: React.FC = () => {
           />
         </div>
       </div>
-      <QuoteModal 
-        isOpen={isQuoteModalOpen} 
-        onClose={() => setIsQuoteModalOpen(false)}
-      />
       <MessagingModal 
         isOpen={isMessagingModalOpen}
         onClose={() => setIsMessagingModalOpen(false)}
