@@ -10,7 +10,8 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+// FIX: Explicitly provide path to help TypeScript resolve the correct `app.use` overload.
+app.use('/', cors());
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
 // Initialize Gemini AI
@@ -499,7 +500,7 @@ app.post('/api/parse-pnr-to-quote', async (req, res) => {
         if (!pnrText) {
             return res.status(400).json({ error: 'pnrText is required.' });
         }
-        const prompt = \`CRITICAL TASK: Analyze the following raw GDS text which contains multiple PNRs for a group booking. Your goal is to structure this information for a price quote.
+        const prompt = `CRITICAL TASK: Analyze the following raw GDS text which contains multiple PNRs for a group booking. Your goal is to structure this information for a price quote.
 
         Follow these steps precisely:
         1.  **Group by Itinerary:** Identify unique flight itineraries. Passengers with the exact same flight segments belong to the same itinerary group.
@@ -512,9 +513,9 @@ app.post('/api/parse-pnr-to-quote', async (req, res) => {
 
         Booking Text to Analyze:
         ---
-        \${pnrText}
+        ${pnrText}
         ---
-        \`;
+        `;
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -567,7 +568,7 @@ app.post('/api/parse-pnr-to-quote', async (req, res) => {
 app.post('/api/parse-booking-to-messages', async (req, res) => {
     try {
         const { content, filePart } = req.body;
-        const prompt = \`
+        const prompt = `
 Analyze the provided flight booking confirmation (which could be text, an image, or a PDF) and extract the key details into a JSON object. Follow these rules precisely:
 1.  **Determine Status**: First, determine if the booking has been ticketed. A ticketed booking will have a ticket number (e.g., \`738-1234567890\`, \`FA PAX...\`). An unticketed booking will have a ticketing time limit (e.g., \`TK TL...\`).
 2.  **ticketNumber**: If ticketed, extract the e-ticket number. If not ticketed, return an empty string.
@@ -580,7 +581,7 @@ Analyze the provided flight booking confirmation (which could be text, an image,
 9.  **itinerary**: Extract all flight segments. Each segment must be on a new line and follow the format: 'HAN - SGN | VN263 | 29SEP | 20:00–22:15'.
 
 Return a JSON object based on the provided schema. All fields must be strings. A field should be an empty string if its corresponding information is not found. **Crucially, either \`ticketNumber\` or \`ticketingTimeLimit\` must be an empty string.**
-\`;      
+`;      
         let requestParts: Part[] = [{ text: prompt }];
         if (content) requestParts.push({ text: content });
         if (filePart) requestParts.push(filePart);
@@ -620,7 +621,7 @@ Return a JSON object based on the provided schema. All fields must be strings. A
 app.post('/api/parse-group-fare', async (req, res) => {
     try {
         const { content, filePart } = req.body;
-        const prompt = \`
+        const prompt = `
 Analyze the provided text or image, which contains a request for a group flight booking. Your task is to extract the details for each flight segment and return them as a structured JSON array.
 
 Follow these rules precisely:
@@ -635,7 +636,7 @@ Follow these rules precisely:
     *   \`agentCode\`: The code associated with the agent (Mã Agent).
 3.  **Handle Missing Data:** If a piece of information for a field is not present for a given segment, return an empty string for that field. This is especially important for \`agent\` and \`agentCode\`, which may not be in the request. Do not guess or make up data.
 4.  **JSON Output:** The final output MUST be a JSON array of objects. Each object represents one flight segment and contains the seven fields listed above. Do not include any other text or explanations in your response.
-\`;
+`;
         let requestParts: Part[] = [{ text: prompt }];
         if (content) requestParts.push({ text: content });
         if (filePart) requestParts.push(filePart);
@@ -679,11 +680,11 @@ app.post('/api/find-nearest-airports', async (req, res) => {
         if (!location) {
             return res.status(400).json({ error: 'location is required.' });
         }
-        const prompt = \`
-    Act as an airport location expert. Find the 3 closest international airports to the following location: "\${location}".
+        const prompt = `
+    Act as an airport location expert. Find the 3 closest international airports to the following location: "${location}".
     Provide the airport name, IATA code, the city/country it's in, and the approximate distance from the location in Vietnamese.
     Return the result as a JSON array of objects.
-  \`;
+  `;
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -720,7 +721,7 @@ app.post('/api/timatic-lookup', async (req, res) => {
 
         let result;
         if (bookingText) {
-             const prompt = \`
+             const prompt = `
     Analyze the provided flight booking text to extract information needed for a TIMATIC (visa requirements) lookup.
     Your task is to identify the passenger's nationality, their final destination, and any transit points.
 
@@ -732,9 +733,9 @@ app.post('/api/timatic-lookup', async (req, res) => {
 
     Booking Text:
     ---
-    \${bookingText}
+    ${bookingText}
     ---
-    \`;
+    `;
              const extractResponse = await ai.models.generateContent({
                 model: 'gemini-2.5-flash',
                 contents: prompt,
@@ -782,17 +783,17 @@ app.post('/api/gds-encoder', async (req, res) => {
 
         switch (tool) {
             case 'airline_airport_lookup':
-                prompt = \`Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp lệnh và kết quả cho việc mã hóa/giải mã '\${params.query}'. Đây có thể là mã/tên hãng hàng không, sân bay, hoặc thành phố. Trình bày rõ ràng lệnh và kết quả. Phản hồi bằng tiếng Việt.\`;
+                prompt = `Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp lệnh và kết quả cho việc mã hóa/giải mã '${params.query}'. Đây có thể là mã/tên hãng hàng không, sân bay, hoặc thành phố. Trình bày rõ ràng lệnh và kết quả. Phản hồi bằng tiếng Việt.`;
                 break;
             case 'equipment_lookup':
-                prompt = \`Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp lệnh và kết quả cho việc tra cứu mã máy bay '\${params.code}'. Trình bày rõ ràng lệnh và kết quả. Phản hồi bằng tiếng Việt.\`;
+                prompt = `Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp lệnh và kết quả cho việc tra cứu mã máy bay '${params.code}'. Trình bày rõ ràng lệnh và kết quả. Phản hồi bằng tiếng Việt.`;
                 break;
             case 'seat_map_lookup':
-                prompt = \`Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp chuỗi lệnh để hiển thị sơ đồ ghế ngồi cho chuyến bay \${params.flightNumber} ngày \${params.date} chặng \${params.segment}. Giải thích từng bước và cho ví dụ kết quả có thể trông như thế nào. Phản hồi bằng tiếng Việt.\`;
+                prompt = `Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp chuỗi lệnh để hiển thị sơ đồ ghế ngồi cho chuyến bay ${params.flightNumber} ngày ${params.date} chặng ${params.segment}. Giải thích từng bước và cho ví dụ kết quả có thể trông như thế nào. Phản hồi bằng tiếng Việt.`;
                 break;
             case 'currency_conversion':
                 const date = params.date || 'hôm nay';
-                prompt = \`Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp lệnh và kết quả quy đổi \${params.amount} \${params.from} sang \${params.to} cho ngày \${date}. Trình bày rõ ràng lệnh và kết quả. Phản hồi bằng tiếng Việt.\`;
+                prompt = `Với vai trò là chuyên gia GDS Amadeus, hãy cung cấp lệnh và kết quả quy đổi ${params.amount} ${params.from} sang ${params.to} cho ngày ${date}. Trình bày rõ ràng lệnh và kết quả. Phản hồi bằng tiếng Việt.`;
                 break;
             default:
                 return res.status(400).json({ error: 'Invalid GDS tool specified.' });
@@ -813,5 +814,5 @@ app.post('/api/gds-encoder', async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-    console.log(\`Backend server listening at http://localhost:\${port}\`);
+    console.log(`Backend server listening at http://localhost:${port}`);
 });
