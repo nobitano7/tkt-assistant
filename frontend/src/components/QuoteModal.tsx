@@ -44,7 +44,7 @@ const COMPANIES = {
   skyteam: {
     id: 'skyteam',
     name: 'Skyteam',
-    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGE5ZTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNi41IDEzLjVDNSA5IDggMyAxMyAzYzQgMCA3IDMuNSA3IDd2NCI+PC9wYXRoPjxwYXRoIGQ9Ik0xNy41IDEwLjVDMTkgMTUgMTYgMjEgMTEgMjFjLTQgMC03LTMuNS03LTd2LTQiPjwvcGF0aD48L3N2Zz4=',
+    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZHRoPSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGE5ZTciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNi41IDEzLjVDNSA5IDggMyAxMyAzYzQgMCA3IDMuNSA3IDd2NCI+PC9wYXRoPjxwYXRoIGQ9Ik0xNy41IDEwLjVDMTkgMTUgMTYgMjEgMTEgMjFjLTQgMC03LTMuNS03LTd2LTQiPjwvcGF0aD48L3N2Zz4=',
     fullName: 'CÔNG TY CỔ PHẦN VÉ MÁY BAY SKYTEAM',
     address: 'Địa chỉ: [Địa chỉ Skyteam]',
     contact: 'Tel: [SĐT Skyteam] | Email: [Email Skyteam]',
@@ -55,7 +55,7 @@ const COMPANIES = {
    hongngochah: {
     id: 'hongngochah',
     name: 'Hồng Ngọc Hà',
-    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyODAgODAiPjxwYXRoIGQ9Ik00MCw3MCBDODAsNTUgMTIwLDU1IDE2MCw3MCIgc3Ryb2tlPSIjMDU3RUE5IiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNTUsNDMgTDI1LDQzIEw0MCwxMyBaIiBmaWxsPSIjREIyNzI4Ii8+PHBhdGggZD0iTTc1LDQzIEwxMDUsNDMgTDkwLDEzIFoiIGZpbGw9IiNEQjI7MjgiLz48dGV4dCB4PSIxMDUiIHk9IjU1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDBweCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwMDAiPmhvbmduZ29jaGE8L3RleHQ+PC9zdmc+',
+    logo: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyODAgODAiPjxwYXRoIGQ9Ik00MCw3MCBDODAsNTUgMTIwLDU1IDE2MCw3MCIgc3Ryb2tlPSIjMDU3RUE5IiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNTUsNDMgTDI1LDQzIEw0MCwxMyBaIiBmaWxsPSIjREIyNzI4Ii8+PHBhdGggZD0iTTc1LDQzIEwxMDUsNDMgTDkwLDEzIFoiIGZpbGw9IiNEQjI3MjgiLz48dGV4dCB4PSIxMDUiIHk9IjU1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDBweCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwMDAiPmhvbmduZ29jaGE8L3RleHQ+PC9zdmc+',
     fullName: 'PHÒNG VÉ HỒNG NGỌC HÀ',
     address: '30 Phan Chu Trinh Str, Hoan Kiem Dist., Ha Noi, Vietnam',
     contact: 'Tel: (84-4) 39275720 | Fax: (84-4) 39275719',
@@ -174,7 +174,12 @@ const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({ isOpen, onClose, 
         if (!activePreview) return;
         setIsDownloading(true);
         try {
-            const { default: htmlToDocx } = await import('html-to-docx');
+            // Use the global htmlToDocx from the script tag
+            const htmlToDocx = (window as any).htmlToDocx;
+            if (!htmlToDocx) {
+                throw new Error('html-to-docx library is not loaded.');
+            }
+            
             const fileData = await htmlToDocx(activePreview.htmlContent, null, {
                 margins: { top: 720, right: 720, bottom: 720, left: 720 },
             });
@@ -203,6 +208,7 @@ const QuotePreviewModal: React.FC<QuotePreviewModalProps> = ({ isOpen, onClose, 
         try {
             const blobHtml = new Blob([activePreview.htmlContent], { type: 'text/html' });
             const blobText = new Blob([activePreview.plainTextContent], { type: 'text/plain' });
+            // FIX: Cast window to any to access the experimental API `ClipboardItem`.
             const clipboardItem = new (window as any).ClipboardItem({
                 'text/html': blobHtml,
                 'text/plain': blobText,
@@ -431,7 +437,7 @@ p{margin:5px 0;}
     </div>
   </div>
   <div class="header-right">
-    <img src="data:image/png;base64,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" alt="Vietnam Airlines Logo" style="height: 25px; width: auto; margin-bottom: 5px;"/>
+    <img src="data:image/png;base64,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" alt="Vietnam Airlines Logo" style="height: 25px; width: auto; margin-bottom: 5px;"/>
     <p>Hot lines: ${company.contact.split('|')[0].trim()}</p>
     <p>Tel: ${company.contact.split('|')[1].trim()}</p>
     <p>Email: ${company.contact.split('|')[2].trim()}</p>
@@ -670,13 +676,13 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose }) => {
   };
 
   const baseTotalPrice = useMemo(() => {
-    return quoteData.itineraryGroups.reduce((groupTotal, group) => {
-        return groupTotal + group.priceRows.reduce((rowTotal, row) => {
+    return quoteData.itineraryGroups.reduce((currentTotal, group) => {
+        return currentTotal + group.priceRows.reduce((groupTotal, row) => {
             const base = parseFloat(row.baseFare.replace(/[^0-9]/g, '')) || 0;
             const tax = parseFloat(row.taxes.replace(/[^0-9]/g, '')) || 0;
             const fee = parseFloat(row.serviceFee.replace(/[^0-9]/g, '')) || 0;
             const pax = parseInt(row.paxCount, 10) || 0;
-            return rowTotal + (base + tax + fee) * pax;
+            return groupTotal + (base + tax + fee) * pax;
         }, 0);
     }, 0);
   }, [quoteData.itineraryGroups]);
