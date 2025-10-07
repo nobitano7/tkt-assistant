@@ -1,29 +1,14 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
-// FIX: Removed `type` keyword from import to comply with coding guidelines.
-import { Part } from '@google/genai';
-import { parseGroupFareRequest, type GroupFareFlightInfo } from '../services/apiService';
+import { parseGroupFareRequest } from '../services/apiService';
+import type { GroupFareFlightInfo } from '../types';
 
 declare const XLSX: any; // Use the global XLSX object from the script tag in index.html
 
 interface GroupFareModalProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-// Helper to convert File to Gemini Part
-async function fileToGenerativePart(file: File): Promise<Part> {
-  const base64EncodedDataPromise = new Promise<string>((resolve) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve((reader.result as string).split(',')[1]);
-    reader.readAsDataURL(file);
-  });
-  return {
-    inlineData: {
-      data: await base64EncodedDataPromise,
-      mimeType: file.type,
-    },
-  };
 }
 
 const TableInput: React.FC<{ value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; disabled?: boolean; }> = ({ value, onChange, disabled = false }) => (
