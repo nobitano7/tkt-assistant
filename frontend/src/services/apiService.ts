@@ -1,5 +1,5 @@
 import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo } from '../types';
-import { type Part, type ChatMessage } from '../types';
+import { type ChatMessage } from '../types';
 
 // Use Vite's environment variable handling. The `import.meta.env` object is populated by Vite during the build process.
 // FIX: Cast `import.meta` to `any` to bypass TypeScript error when Vite client types are not available.
