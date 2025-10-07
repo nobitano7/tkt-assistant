@@ -107,6 +107,7 @@ const TimaticTab: React.FC = () => {
         setIsLoading(true);
         setError('');
         setResult('');
+
         try {
             if (!bookingText.trim() && (!nationality.trim() || !destination.trim())) {
                 throw new Error('Vui lòng nhập booking hoặc điền quốc tịch và điểm đến.');
