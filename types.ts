@@ -1,0 +1,55 @@
+export interface Message {
+  role: 'user' | 'model';
+  content: string;
+  image?: string; // To hold the base64 data URL for attached images
+}
+
+// A single pricing row, corresponding to a fare class
+export interface PriceRow {
+  flightClass: string;
+  passengers: string;
+  baseFare: string;
+  taxes: string;
+  serviceFee: string;
+  paxCount: string;
+}
+
+// A group of people sharing the same flight path
+export interface ItineraryGroup {
+  itineraryDetails: string;
+  priceRows: PriceRow[];
+}
+
+// The complete quote object
+export interface QuoteData {
+  customerName: string;
+  itineraryGroups: ItineraryGroup[];
+  totalInWords: string;
+  signerName: string;
+  notes: string;
+}
+
+
+export interface BookingInfo {
+  pnr: string;
+  passengerName: string;
+  ticketNumber: string;
+  ticketingTimeLimit: string;
+  bookingClass: string;
+  frequentFlyer: string;
+  vipInfo: string;
+  itinerary: string;
+}
+
+export interface AirportInfo {
+  airportName: string;
+  iataCode: string;
+  location: string;
+  distance: string;
+}
+
+export interface ChatSession {
+  id: number;
+  title: string;
+  messages: Message[];
+}

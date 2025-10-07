@@ -1,0 +1,5 @@
+{
+  "name": "Trợ lý Nghiệp vụ TKT",
+  "description": "Một chatbot trợ lý nghiệp vụ cho nhân viên ticketing, cung cấp hỗ trợ về GDS (1A, 1B, 1G), tra cứu TIMATIC, và tìm kiếm thông tin trên các trang web du lịch, với ưu tiên cho abtrip.vn.",
+  "requestFramePermissions": []
+}
