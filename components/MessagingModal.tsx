@@ -1,8 +1,10 @@
 
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { type BookingInfo } from '../types';
 import { parseBookingToMessages } from '../services/geminiService';
-import { type Part } from '@google/genai';
+// FIX: Removed `type` keyword from import to comply with coding guidelines.
+import { Part } from '@google/genai';
 
 interface MessagingModalProps {
   isOpen: boolean;
