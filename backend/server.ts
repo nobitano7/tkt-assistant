@@ -404,7 +404,7 @@ Phân tích kỹ lưỡng các quy định cho từng chặng (nếu có quá c�
     
     try {
         const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: timaticPrompt });
-        return response.text;
+        return response.text ?? '';
     } catch (error) {
         console.error("Error in TIMATIC tool simulation:", error);
         return "Xin lỗi, không thể tra cứu thông tin TIMATIC vào lúc này.";
@@ -447,6 +447,7 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
             messageParts.push({ inlineData: { data: image.data, mimeType: image.mimeType } });
         }
         
+        // FIX: Argument for sendMessageStream must be an object with a 'message' property.
         const resultStream = await chat.sendMessageStream({ message: messageParts });
         
         res.setHeader('Content-Type', 'application/json');
@@ -490,6 +491,7 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
                     functionResponse: { name: toolResponse.name, response: toolResponse.response },
                 }));
 
+                // FIX: Argument for sendMessageStream must be an object with a 'message' property.
                 const finalStream = await chat.sendMessageStream({ message: functionResponseParts });
                 
                 for await (const chunk of finalStream) {
@@ -508,7 +510,6 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
     }
 });
 
-
 app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Response) => {
     try {
         const { pnrText } = req.body;
@@ -517,20 +518,20 @@ app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Re
         }
         const prompt = `CRITICAL TASK: Analyze the following raw GDS text which contains multiple PNRs for a group booking. Your goal is to structure this information for a price quote.
 
-        Follow these steps precisely:
-        1.  **Group by Itinerary:** Identify unique flight itineraries. Passengers with the exact same flight segments belong to the same itinerary group.
-        2.  **Group by Class:** Within each itinerary group, further group passengers by their booking class (e.g., J, W, B).
-        3.  **Extract Details:** For each group, extract:
-            - \`itineraryDetails\`: The full, multi-line flight segments for the itinerary group. CRITICAL: For each flight segment string from the raw text, you must reformat it to be clean and readable. The output format MUST be: \`[Airline Code][Flight Number] [Origin]-[Destination] | [Date] | [Departure Time]-[Arrival Time]\`. For example, a raw segment like 'VN 253 J 02OCT 4 HANSGN HK1 1400 1610 02OCT E VN/EXXTGQ' MUST be converted to 'VN 253 HAN-SGN | 02OCT | 14:00-16:10'. You MUST remove the booking class, status codes (HK1), and any trailing identifiers. Preserve original line breaks between segments.
-            - \`passengers\`: A single string listing all passengers for that specific booking class within that itinerary.
-            - \`flightClass\`: Infer the Vietnamese fare family name (e.g., 'Thương gia', 'Phổ thông') based on the booking class code and your internal knowledge.
-        4.  **Structure Output:** Return a single JSON object. The root object must have a key "itineraryGroups". This key holds an array of itinerary group objects. Each itinerary group object has an "itineraryDetails" string and a "priceRows" array. Each object in "priceRows" contains the "passengers" and "flightClass" for that subgroup.
+Follow these steps precisely:
+1.  **Group by Itinerary:** Identify unique flight itineraries. Passengers with the exact same flight segments belong to the same itinerary group.
+2.  **Group by Class:** Within each itinerary group, further group passengers by their booking class (e.g., J, W, B).
+3.  **Extract Details:** For each group, extract:
+    - \`itineraryDetails\`: The full, multi-line flight segments for the itinerary group. CRITICAL: For each flight segment string from the raw text, you must reformat it to be clean and readable. The output format MUST be: \`[Airline Code][Flight Number] [Origin]-[Destination] | [Date] | [Departure Time]-[Arrival Time]\`. For example, a raw segment like 'VN 253 J 02OCT 4 HANSGN HK1 1400 1610 02OCT E VN/EXXTGQ' MUST be converted to 'VN 253 HAN-SGN | 02OCT | 14:00-16:10'. You MUST remove the booking class, status codes (HK1), and any trailing identifiers. Preserve original line breaks between segments.
+    - \`passengers\`: A single string listing all passengers for that specific booking class within that itinerary.
+    - \`flightClass\`: Infer the Vietnamese fare family name (e.g., 'Thương gia', 'Phổ thông') based on the booking class code and your internal knowledge.
+4.  **Structure Output:** Return a single JSON object. The root object must have a key "itineraryGroups". This key holds an array of itinerary group objects. Each itinerary group object has an "itineraryDetails" string and a "priceRows" array. Each object in "priceRows" contains the "passengers" and "flightClass" for that subgroup.
 
-        Booking Text to Analyze:
-        ---
-        ${pnrText}
-        ---
-        `;
+Booking Text to Analyze:
+---
+${pnrText}
+---
+`;
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -546,15 +547,24 @@ app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Re
                             items: {
                                 type: Type.OBJECT,
                                 properties: {
-                                    itineraryDetails: { type: Type.STRING, description: "The full, multi-line itinerary block for this group, cleaned and formatted." },
+                                    itineraryDetails: {
+                                        type: Type.STRING,
+                                        description: "The full, multi-line itinerary block for this group, cleaned and formatted."
+                                    },
                                     priceRows: {
                                         type: Type.ARRAY,
                                         description: "An array of passenger groups within this itinerary, separated by fare class.",
                                         items: {
                                             type: Type.OBJECT,
                                             properties: {
-                                                passengers: { type: Type.STRING, description: 'Full name(s) of the passenger(s) for this specific fare class.' },
-                                                flightClass: { type: Type.STRING, description: 'The inferred fare class name, e.g., "Thương gia", "Phổ thông".' },
+                                                passengers: {
+                                                    type: Type.STRING,
+                                                    description: 'Full name(s) of the passenger(s) for this specific fare class.'
+                                                },
+                                                flightClass: {
+                                                    type: Type.STRING,
+                                                    description: 'The inferred fare class name, e.g., "Thương gia", "Phổ thông".'
+                                                },
                                             },
                                             required: ["passengers", "flightClass"]
                                         }
@@ -571,7 +581,6 @@ app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Re
 
         const jsonString = response.text ?? '{}';
         res.json(JSON.parse(jsonString));
-
     } catch (error) {
         console.error('Error in /api/parse-pnr-to-quote:', error);
         res.status(500).json({ error: 'Failed to parse PNR to quote.' });
@@ -820,7 +829,7 @@ app.post('/api/gds-encoder', async (req: express.Request, res: express.Response)
             contents: prompt,
         });
 
-        res.json({ result: response.text });
+        res.json({ result: response.text ?? '' });
     } catch (error) {
         console.error('Error in /api/gds-encoder:', error);
         res.status(500).json({ error: 'Failed to run GDS encoder tool.' });
