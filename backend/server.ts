@@ -10,9 +10,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-// FIX: Swapped middleware order to resolve a potential type overload issue with app.use.
-app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
+// Fix: Swapped middleware order to resolve a potential type overload issue with app.use.
 app.use(cors());
+app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
 if (!process.env.API_KEY) {
     console.error("FATAL ERROR: API_KEY is not defined in environment variables.");
