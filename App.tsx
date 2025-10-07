@@ -1,6 +1,8 @@
 
+
 import React, { useState, useCallback, useEffect } from 'react';
-import { type Chat, GoogleGenAI, type Part, type Content } from '@google/genai';
+// FIX: Removed `type` keyword from import to comply with coding guidelines.
+import { Chat, GoogleGenAI, Part, Content } from '@google/genai';
 import { Sidebar } from './components/Sidebar';
 import { ChatWindow } from './components/ChatWindow';
 import { ChatInput } from './components/ChatInput';
@@ -215,17 +217,19 @@ const App: React.FC = () => {
             
             let finalAccumulatedText = "";
             for await (const chunk of finalStream) {
-                finalAccumulatedText += chunk.text;
-                setSessions(prev =>
-                  prev.map(session => {
-                    if (session.id === activeSessionId) {
-                      const updatedMessages = [...session.messages];
-                      updatedMessages[updatedMessages.length - 1] = { ...updatedMessages[updatedMessages.length - 1], content: finalAccumulatedText };
-                      return { ...session, messages: updatedMessages };
-                    }
-                    return session;
-                  })
-                );
+                if (chunk.text) {
+                    finalAccumulatedText += chunk.text;
+                    setSessions(prev =>
+                      prev.map(session => {
+                        if (session.id === activeSessionId) {
+                          const updatedMessages = [...session.messages];
+                          updatedMessages[updatedMessages.length - 1] = { ...updatedMessages[updatedMessages.length - 1], content: finalAccumulatedText };
+                          return { ...session, messages: updatedMessages };
+                        }
+                        return session;
+                      })
+                    );
+                }
             }
         }
       }
