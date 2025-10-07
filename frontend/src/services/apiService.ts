@@ -1,7 +1,10 @@
+
 import { type ItineraryGroup, type BookingInfo, type AirportInfo, type GroupFareFlightInfo } from '../types';
 import { type Part, type ChatMessage } from '../types';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+// FIX: Cast `import.meta` to `any` to bypass TypeScript errors related to Vite's environment variables (`import.meta.env`).
+// This workaround is necessary as the TypeScript environment appears to be misconfigured and cannot find Vite's client types.
+const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 // Helper function to convert a File object to a Gemini-compatible Part.
 async function fileToGenerativePart(file: File): Promise<Part> {
