@@ -10,8 +10,8 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-// FIX: Corrected an issue where `cors()` was called with an unnecessary path argument. To apply the middleware globally, it should be called without arguments.
-app.use(cors());
+// Fix: Explicitly specifying the path for the cors middleware to resolve a potential TypeScript overload issue.
+app.use('/', cors());
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
 // Initialize Gemini AI
