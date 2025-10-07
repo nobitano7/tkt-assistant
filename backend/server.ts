@@ -1,7 +1,6 @@
 // FIX: Disambiguated express Request and Response types to prevent conflict with global types.
 // FIX: Explicitly import Request and Response from express to fix type resolution issues.
-// FIX: Changed import to use default export and qualified types to avoid ambiguity.
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 // FIX: Removed `type` keyword from import to comply with coding guidelines.
@@ -15,8 +14,8 @@ const port = process.env.PORT || 3001;
 
 // Middleware
 // FIX: Swapped order to resolve potential type overload issue.
-app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 app.use(cors());
+app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
 
 if (!process.env.API_KEY) {
@@ -419,7 +418,7 @@ function runGenerateSrDocsTool(args: any): { command: string } {
 // --- API Endpoints ---
 
 // FIX: Changed Request and Response to express.Request and express.Response to use correct types.
-app.post('/api/chat', async (req: express.Request, res: express.Response) => {
+app.post('/api/chat', async (req: Request, res: Response) => {
     try {
         const { history, message, image } = req.body;
         
@@ -510,7 +509,7 @@ app.post('/api/chat', async (req: express.Request, res: express.Response) => {
 });
 
 
-app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Response) => {
+app.post('/api/parse-pnr-to-quote', async (req: Request, res: Response) => {
     try {
         const { pnrText } = req.body;
         if (!pnrText) {
@@ -583,7 +582,7 @@ app.post('/api/parse-pnr-to-quote', async (req: express.Request, res: express.Re
 });
 
 
-app.post('/api/parse-booking-to-messages', async (req: express.Request, res: express.Response) => {
+app.post('/api/parse-booking-to-messages', async (req: Request, res: Response) => {
     try {
         const { content, filePart } = req.body;
         const prompt = `
@@ -639,7 +638,7 @@ Return a JSON object based on the provided schema. All fields must be strings. A
 });
 
 
-app.post('/api/parse-group-fare', async (req: express.Request, res: express.Response) => {
+app.post('/api/parse-group-fare', async (req: Request, res: Response) => {
     try {
         const { content, filePart } = req.body;
         const prompt = `
@@ -698,7 +697,7 @@ Follow these rules precisely:
     }
 });
 
-app.post('/api/find-nearest-airports', async (req: express.Request, res: express.Response) => {
+app.post('/api/find-nearest-airports', async (req: Request, res: Response) => {
     try {
         const { location } = req.body;
         if (!location) {
@@ -742,7 +741,7 @@ app.post('/api/find-nearest-airports', async (req: express.Request, res: express
 });
 
 
-app.post('/api/timatic-lookup', async (req: express.Request, res: express.Response) => {
+app.post('/api/timatic-lookup', async (req: Request, res: Response) => {
     try {
         const { nationality, destination, transitPoints, bookingText } = req.body;
 
@@ -805,7 +804,7 @@ app.post('/api/timatic-lookup', async (req: express.Request, res: express.Respon
     }
 });
 
-app.post('/api/gds-encoder', async (req: express.Request, res: express.Response) => {
+app.post('/api/gds-encoder', async (req: Request, res: Response) => {
     try {
         const { tool, params } = req.body;
         let prompt = '';
