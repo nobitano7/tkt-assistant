@@ -10,8 +10,8 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-// FIX: Explicitly provide path to help TypeScript resolve the correct `app.use` overload.
-app.use('/', cors());
+// FIX: The path argument '/' is not necessary for applying cors middleware globally.
+app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
 // Initialize Gemini AI
@@ -392,7 +392,7 @@ Phân tích kỹ lưỡng các quy định cho từng chặng (nếu có quá c�
     
     try {
         const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: timaticPrompt });
-        return response.text;
+        return response.text ?? "Xin lỗi, không có phản hồi từ AI.";
     } catch (error) {
         console.error("Error in TIMATIC tool simulation:", error);
         return "Xin lỗi, không thể tra cứu thông tin TIMATIC vào lúc này.";
@@ -554,7 +554,10 @@ app.post('/api/parse-pnr-to-quote', async (req, res) => {
             }
         });
 
-        const jsonString = response.text.trim();
+        const jsonString = response.text ?? '';
+        if (!jsonString) {
+            throw new Error('Received an empty response from the AI model.');
+        }
         const parsedJson = JSON.parse(jsonString);
         res.json(parsedJson);
 
@@ -608,7 +611,10 @@ Return a JSON object based on the provided schema. All fields must be strings. A
             }
         });
 
-        const jsonString = response.text.trim();
+        const jsonString = response.text ?? '';
+        if (!jsonString) {
+            throw new Error('Received an empty response from the AI model.');
+        }
         res.json(JSON.parse(jsonString));
 
     } catch (error) {
@@ -665,7 +671,10 @@ Follow these rules precisely:
             }
         });
 
-        const jsonString = response.text.trim();
+        const jsonString = response.text ?? '';
+        if (!jsonString) {
+            throw new Error('Received an empty response from the AI model.');
+        }
         res.json(JSON.parse(jsonString));
 
     } catch (error) {
@@ -706,7 +715,10 @@ app.post('/api/find-nearest-airports', async (req, res) => {
                 }
             }
         });
-        const jsonString = response.text.trim();
+        const jsonString = response.text ?? '';
+        if (!jsonString) {
+             return res.json([]);
+        }
         res.json(JSON.parse(jsonString));
     } catch (error) {
         console.error('Error in /api/find-nearest-airports:', error);
@@ -752,7 +764,9 @@ app.post('/api/timatic-lookup', async (req, res) => {
                     }
                 }
             });
-            const extractedDetails = JSON.parse(extractResponse.text.trim());
+            const jsonString = extractResponse.text ?? '{}';
+            const extractedDetails = JSON.parse(jsonString);
+
             if (!extractedDetails.nationality || !extractedDetails.destination) {
                 return res.status(400).json({ error: 'Could not automatically determine Nationality or Destination from booking.' });
             }
@@ -804,7 +818,7 @@ app.post('/api/gds-encoder', async (req, res) => {
             contents: prompt,
         });
 
-        res.json({ result: response.text });
+        res.json({ result: response.text ?? '' });
     } catch (error) {
         console.error('Error in /api/gds-encoder:', error);
         res.status(500).json({ error: 'Failed to run GDS encoder tool.' });
