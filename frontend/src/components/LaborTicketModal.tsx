@@ -1,5 +1,4 @@
-
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 interface LaborTicketModalProps {
   isOpen: boolean;
@@ -59,10 +58,10 @@ const CommandDisplay: React.FC<{
 
 const TinhGiaTab: React.FC = () => {
     // B1 states
-    const [fareBasis, setFareBasis] = useState('L1YVN');
-    const [discount, setDiscount] = useState('5');
-    const [altFareBasis, setAltFareBasis] = useState('QOXVN');
-    const [altDiscount, setAltDiscount] = useState('25');
+    const [fareBasis] = useState('L1YVN');
+    const [discount] = useState('5');
+    const [altFareBasis] = useState('QOXVN');
+    const [altDiscount] = useState('25');
 
     return (
         <div className="space-y-4">
