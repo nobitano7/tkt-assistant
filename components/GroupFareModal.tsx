@@ -1,6 +1,8 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
-import { type Part } from '@google/genai';
+// FIX: Removed `type` keyword from import to comply with coding guidelines.
+import { Part } from '@google/genai';
 import { parseGroupFareRequest, type GroupFareFlightInfo } from '../services/geminiService';
 
 declare const XLSX: any; // Use the global XLSX object from the script tag in index.html
