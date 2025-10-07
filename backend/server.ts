@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { GoogleGenAI, type Chat, type Part, FunctionDeclaration, Type, type Content } from "@google/genai";
+// FIX: Removed `type` keyword from import to comply with coding guidelines.
+import { GoogleGenAI, Chat, Part, FunctionDeclaration, Type, Content } from "@google/genai";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -10,7 +11,6 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
-// Fix: Swapped middleware order to resolve a potential type overload issue with app.use.
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Allow large JSON bodies for images
 
@@ -431,6 +431,7 @@ app.post('/api/chat', async (req, res) => {
             history: formattedHistory
         });
 
+        // Correctly type messageParts as an array of Part objects
         const messageParts: Part[] = [];
         if (message) {
             messageParts.push({ text: message });
@@ -439,7 +440,6 @@ app.post('/api/chat', async (req, res) => {
             messageParts.push({ inlineData: { data: image.data, mimeType: image.mimeType } });
         }
         
-        // FIX: The `message` property should be an array of Parts, not an object containing a `parts` property.
         const resultStream = await chat.sendMessageStream({ message: messageParts });
         
         res.setHeader('Content-Type', 'application/json');
@@ -483,7 +483,7 @@ app.post('/api/chat', async (req, res) => {
                     functionResponse: { name: toolResponse.name, response: toolResponse.response },
                 }));
 
-                // FIX: The `message` property should be an array of Parts, not an object containing a `parts` property.
+                // Correctly call sendMessageStream with an array of Parts
                 const finalStream = await chat.sendMessageStream({ message: functionResponseParts });
                 
                 for await (const chunk of finalStream) {
@@ -772,8 +772,8 @@ app.post('/api/timatic-lookup', async (req, res) => {
                     }
                 }
             });
-            const jsonString = extractResponse.text;
-            const extractedDetails = JSON.parse(jsonString || '{}');
+            const jsonString = extractResponse.text ?? '{}';
+            const extractedDetails = JSON.parse(jsonString);
 
             if (!extractedDetails.nationality || !extractedDetails.destination) {
                 return res.status(400).json({ error: 'Could not automatically determine Nationality or Destination from booking.' });
@@ -826,7 +826,7 @@ app.post('/api/gds-encoder', async (req, res) => {
             contents: prompt,
         });
 
-        res.json({ result: response.text });
+        res.json({ result: response.text ?? '' });
     } catch (error) {
         console.error('Error in /api/gds-encoder:', error);
         res.status(500).json({ error: 'Failed to run GDS encoder tool.' });
